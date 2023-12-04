@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>URL Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 300px;
+      padding: 5px;
+      margin-right: 10px;
+    }
+    button {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>URL Search</h1>
+  <label for="urlInput">Enter URL:</label>
+  <input type="text" id="urlInput" placeholder="e.g., https://www.example.com">
+  <button onclick="searchURL()">Search</button>
+
+  <div id="reportSection" style="display: none;">
+    <h2>Report</h2>
+    <p id="reportContent"></p>
+    <a id="downloadLink" download="report.txt"><button>Download Report</button></a>
+  </div>
+
+  <script>
+    function searchURL() {
+      const url = document.getElementById('urlInput').value;
+      if (url !== '') {
+        openInNewTab(`https://web.archive.org/web/*/${url}`);
+        openInNewTab(`https://urlscan.io/search/#search=${url}`);
+        openInNewTab(`https://www.virustotal.com/gui/domain/${url}`);
+        generateReport(url);
+      } else {
+        alert('Please enter a URL!');
+      }
+    }
+
+    function openInNewTab(url) {
+      const win = window.open(url, '_blank');
+      if (win) {
+        win.focus();
+      } else {
+        alert('Please allow pop-ups for this site to open the links.');
+      }
+    }
+
+    function generateReport(url) {
+      const reportContent = `URL: ${url}\nArchived URL: https://web.archive.org/web/*/${url}\nURLScan: https://urlscan.io/search/#search=${url}\nVirusTotal: https://www.virustotal.com/gui/domain/${url}`;
+      document.getElementById('reportContent').innerText = reportContent;
+      document.getElementById('downloadLink').href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(reportContent);
+      document.getElementById('reportSection').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
